@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Interview analysis artifact",
+  "type": "object",
+  "required": ["meta", "viewpoints", "expressions", "socratic_questions"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["interviewee", "thesis_en", "thesis_zh", "domain_tags"],
+      "additionalProperties": false,
+      "properties": {
+        "interviewee": {
+          "type": "string",
+          "minLength": 1,
+          "description": "被访谈人姓名。无法确定时写 Unknown speaker，不要编造。"
+        },
+        "interviewer": {
+          "type": "string",
+          "description": "主持人姓名，未知留空字符串。"
+        },
+        "thesis_en": {
+          "type": "string",
+          "minLength": 10,
+          "description": "被访谈人的核心主张，一句英文。"
+        },
+        "thesis_zh": {
+          "type": "string",
+          "minLength": 4,
+          "description": "同一主张的中文表述。"
+        },
+        "domain_tags": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+          "description": "领域标签，小写连字符，用于 Obsidian tag。"
+        }
+      }
+    },
+
+    "viewpoints": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title_en",
+          "title_zh",
+          "claim_en",
+          "reasoning_en",
+          "evidence_quote",
+          "speaker",
+          "attribution",
+          "speaker_confidence",
+          "retelling_30s",
+          "retelling_2min",
+          "counterpoint_en"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{2,60}$",
+            "description": "稳定标识，小写连字符，用于跨次运行对账。"
+          },
+          "title_en": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 80,
+            "description": "观点短标题，作为原子笔记文件名。"
+          },
+          "title_zh": { "type": "string", "minLength": 2, "maxLength": 40 },
+          "claim_en": {
+            "type": "string",
+            "minLength": 15,
+            "description": "一句英文断言，说清他主张什么。"
+          },
+          "reasoning_en": {
+            "type": "string",
+            "minLength": 40,
+            "description": "他的论据或机制：为什么他这么认为。"
+          },
+          "evidence_quote": {
+            "type": "string",
+            "minLength": 15,
+            "description": "原文引证。必须能在文字稿中找到，校验器会核。"
+          },
+          "paragraph_index": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "引文所在段落序号，用于生成时间戳深链。"
+          },
+          "speaker": { "type": "string", "minLength": 1 },
+          "attribution": {
+            "type": "string",
+            "enum": ["stated", "inferred"],
+            "description": "stated=文字稿中有明确说话人线索；inferred=从内容推断。"
+          },
+          "speaker_confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "这个观点确实属于被访谈人的把握程度。"
+          },
+          "retelling_30s": {
+            "type": "string",
+            "minLength": 60,
+            "description": "30 秒英文口播稿，约 70-90 词。"
+          },
+          "retelling_2min": {
+            "type": "string",
+            "minLength": 300,
+            "description": "2 分钟英文口播稿，约 250-320 词。"
+          },
+          "counterpoint_en": {
+            "type": "string",
+            "minLength": 30,
+            "description": "反方视角：这个观点最站不住的地方。"
+          },
+          "tags": {
+            "type": "array",
+            "maxItems": 5,
+            "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" }
+          }
+        }
+      }
+    },
+
+    "expressions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 25,
+      "items": {
+        "type": "object",
+        "required": ["text", "type", "meaning_zh", "source_sentence", "your_example"],
+        "additionalProperties": false,
+        "properties": {
+          "text": { "type": "string", "minLength": 2 },
+          "type": {
+            "type": "string",
+            "enum": ["idiom", "collocation", "sentence_frame", "term"]
+          },
+          "meaning_zh": { "type": "string", "minLength": 2 },
+          "source_sentence": {
+            "type": "string",
+            "minLength": 10,
+            "description": "原文中出现该表达的句子。校验器会核。"
+          },
+          "your_example": {
+            "type": "string",
+            "minLength": 20,
+            "description": "面向用户自身语境的新例句，不得复述原句。"
+          }
+        }
+      }
+    },
+
+    "socratic_questions": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["question_en", "why_hard_zh", "angle_en"],
+        "additionalProperties": false,
+        "properties": {
+          "question_en": {
+            "type": "string",
+            "minLength": 15,
+            "description": "别人可能反问你的英文问题。"
+          },
+          "why_hard_zh": {
+            "type": "string",
+            "minLength": 5,
+            "description": "这个问题难在哪，中文说明。"
+          },
+          "angle_en": {
+            "type": "string",
+            "minLength": 30,
+            "description": "建议的回应角度，英文，给骨架而非完整答案。"
+          }
+        }
+      }
+    }
+  }
+}
