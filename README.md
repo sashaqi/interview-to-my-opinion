@@ -74,6 +74,10 @@ uv run pytest                                         # 测试
 - **yt-dlp 会遇到 429。** 字幕语言已收窄到 `en,en-orig,en-US,en-GB` 并串行下载，仍触发就等几分钟。不要放宽 `ITMO_SUB_LANGS`。
 - **vault 在 iCloud。** 文件可能被逐出本地，`itmo doctor` 会检查。
 
+## License
+
+MIT，见 [LICENSE](LICENSE)。
+
 ## 致谢
 
 分层架构参考了 [english-podcast-learning-agent](https://github.com/chenhanyue228-rgb/english-podcast-learning-agent)：Skill 负责语言判断、Python 负责编排与校验、外部系统存知识。本项目把发布目标从 Notion 换成 Obsidian，把学习重心从词汇表达换成观点提炼与复述，并重做了采集层以支持 YouTube。
